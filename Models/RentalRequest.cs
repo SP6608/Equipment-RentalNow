@@ -1,4 +1,5 @@
 ﻿using Equipment_RentalNow.Data;
+using Equipment_RentalNow.Data.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace Equipment_RentalNow.Models

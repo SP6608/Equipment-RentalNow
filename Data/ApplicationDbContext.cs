@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Equipment_RentalNow.Data.Models;
+using Equipment_RentalNow.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Equipment_RentalNow.Data
@@ -15,5 +17,10 @@ namespace Equipment_RentalNow.Data
 
             builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
         }
+        public virtual DbSet<EquipmentItem> EquipmentItems { get; set; } = null!;
+
+        public virtual DbSet<RentalRequest> RentalRequests { get; set; } = null!;
+
+        public virtual DbSet<RentalRequestItem> RentalRequestItems { get; set; } = null!;
     }
 }
