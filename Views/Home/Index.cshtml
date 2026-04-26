@@ -1,8 +1,117 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<header class="text-center mb-5">
+    <h1 class="display-4">Equipment Rental</h1>
+    <p class="lead">
+        Система за разглеждане и заявяване на оборудване.
+    </p>
+</header>
+
+<main>
+    @if (User.Identity != null && User.Identity.IsAuthenticated)
+    {
+        @if (User.IsInRole("Admin"))
+        {
+            <section class="mb-5">
+                <h2 class="mb-4">Административно табло</h2>
+
+                <div class="row g-4">
+                    <div class="col-md-3">
+                        <div class="card text-center shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title">Потребители</h5>
+                                <p class="display-6">@ViewBag.UsersCount</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="card text-center shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title">Оборудване</h5>
+                                <p class="display-6">@ViewBag.EquipmentCount</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="card text-center shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title">Всички заявки</h5>
+                                <p class="display-6">@ViewBag.RequestsCount</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="card text-center shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title">В изчакване</h5>
+                                <p class="display-6">@ViewBag.PendingRequestsCount</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h3>Бързи действия</h3>
+
+                <div class="d-flex flex-wrap gap-2 mt-3">
+                    <a asp-controller="Equipment" asp-action="Index" class="btn btn-primary">
+                        Управление на оборудване
+                    </a>
+
+                    <a asp-controller="RentalRequests" asp-action="Index" class="btn btn-secondary">
+                        Управление на заявки
+                    </a>
+
+                    <a asp-controller="Users" asp-action="Index" class="btn btn-outline-dark">
+                        Управление на потребители
+                    </a>
+                </div>
+            </section>
+        }
+        else
+        {
+            <section class="text-center">
+                <h2>Добре дошли!</h2>
+                <p>
+                    Можете да разглеждате оборудване, да търсите по име
+                    и да създавате заявки за използване.
+                </p>
+
+                <div class="mt-4">
+                    <a asp-controller="Equipment" asp-action="Index" class="btn btn-primary">
+                        Разгледай оборудване
+                    </a>
+
+                    <a asp-controller="RentalRequests" asp-action="MyRequests" class="btn btn-outline-secondary">
+                        Моите заявки
+                    </a>
+                </div>
+            </section>
+        }
+    }
+    else
+    {
+        <section class="text-center">
+            <h2>Добре дошли в Equipment Rental</h2>
+            <p>
+                Влезте в системата или се регистрирайте, за да заявите оборудване.
+            </p>
+
+            <div class="mt-4">
+                <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-primary">
+                    Вход
+                </a>
+
+                <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-outline-secondary">
+                    Регистрация
+                </a>
+            </div>
+        </section>
+    }
+</main>
