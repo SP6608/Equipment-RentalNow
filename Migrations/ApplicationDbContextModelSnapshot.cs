@@ -97,6 +97,140 @@ namespace Equipment_RentalNow.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("Equipment_RentalNow.Data.Models.EquipmentItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AvailableQuantity")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Condition")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("ImageUrl")
+                        .HasMaxLength(2048)
+                        .HasColumnType("nvarchar(2048)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EquipmentItems");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AvailableQuantity = 5,
+                            Condition = "Ново",
+                            Description = "Dell Latitude 5420, i5, 16GB RAM",
+                            ImageUrl = "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=500",
+                            Name = "Лаптоп Dell"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            AvailableQuantity = 3,
+                            Condition = "Използвано",
+                            Description = "HD проектор за презентации",
+                            ImageUrl = "https://images.unsplash.com/photo-1581093458791-9f3c3b7d7b3f?w=500",
+                            Name = "Проектор Epson"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            AvailableQuantity = 2,
+                            Condition = "Ново",
+                            Description = "DSLR камера за снимки и видео",
+                            ImageUrl = "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=500",
+                            Name = "Камера Canon"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            AvailableQuantity = 4,
+                            Condition = "Ново",
+                            Description = "Студиен микрофон",
+                            ImageUrl = "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=500",
+                            Name = "Микрофон Rode"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            AvailableQuantity = 1,
+                            Condition = "Използвано",
+                            Description = "Creality Ender 3 V2",
+                            ImageUrl = "https://images.unsplash.com/photo-1581091870627-3b5c1c1f9d4b?w=500",
+                            Name = "3D Принтер Creality"
+                        });
+                });
+
+            modelBuilder.Entity("Equipment_RentalNow.Data.Models.RentalRequest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Comment")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RentalRequests");
+                });
+
+            modelBuilder.Entity("Equipment_RentalNow.Data.Models.RentalRequestItem", b =>
+                {
+                    b.Property<int>("RentalRequestId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EquipmentItemId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("RentalRequestId", "EquipmentItemId");
+
+                    b.HasIndex("EquipmentItemId");
+
+                    b.ToTable("RentalRequestItems");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -250,6 +384,36 @@ namespace Equipment_RentalNow.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Equipment_RentalNow.Data.Models.RentalRequest", b =>
+                {
+                    b.HasOne("Equipment_RentalNow.Data.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Equipment_RentalNow.Data.Models.RentalRequestItem", b =>
+                {
+                    b.HasOne("Equipment_RentalNow.Data.Models.EquipmentItem", "EquipmentItem")
+                        .WithMany("RentalRequestItems")
+                        .HasForeignKey("EquipmentItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Equipment_RentalNow.Data.Models.RentalRequest", "RentalRequest")
+                        .WithMany("RentalRequestItems")
+                        .HasForeignKey("RentalRequestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("EquipmentItem");
+
+                    b.Navigation("RentalRequest");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -299,6 +463,16 @@ namespace Equipment_RentalNow.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Equipment_RentalNow.Data.Models.EquipmentItem", b =>
+                {
+                    b.Navigation("RentalRequestItems");
+                });
+
+            modelBuilder.Entity("Equipment_RentalNow.Data.Models.RentalRequest", b =>
+                {
+                    b.Navigation("RentalRequestItems");
                 });
 #pragma warning restore 612, 618
         }

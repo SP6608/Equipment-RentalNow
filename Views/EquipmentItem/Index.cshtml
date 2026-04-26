@@ -1,0 +1,75 @@
+﻿@model IEnumerable<Equipment_RentalNow.Data.Models.EquipmentItem>
+
+@{
+    ViewData["Title"] = "Equipment";
+}
+
+<h1 class="mb-4">Equipment</h1>
+
+<form method="get" class="mb-4">
+    <div class="input-group">
+        <input type="text" name="search" value="@ViewBag.Search" class="form-control" placeholder="Search by name..." />
+        <button class="btn btn-outline-secondary" type="submit">Search</button>
+    </div>
+</form>
+
+@if (User.IsInRole("Admin"))
+{
+    <div class="mb-3">
+        <a asp-controller="EquipmentItem" asp-action="Create" class="btn btn-primary">
+            Add Equipment
+        </a>
+    </div>
+}
+
+@if (Model == null || !Model.Any())
+{
+    <p>No equipment found.</p>
+}
+else
+{
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+
+                    <img src="@(string.IsNullOrEmpty(item.ImageUrl) ? "/images/no-image.png" : item.ImageUrl)"
+                         class="card-img-top"
+                         style="height:200px; object-fit:cover;" />
+
+                    <div class="card-body">
+                        <h5 class="card-title">@item.Name</h5>
+                        <p class="card-text">@item.Description</p>
+
+                        <p><strong>Available:</strong> @item.AvailableQuantity</p>
+                        <p><strong>Condition:</strong> @item.Condition</p>
+                    </div>
+
+                    <div class="card-footer d-flex justify-content-between">
+                        <a asp-controller="EquipmentItem" asp-action="Details" asp-route-id="@item.Id"
+                               class="btn btn-outline-primary btn-sm">
+                            Details
+                        </a>
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <div>
+                                <a asp-controller="EquipmentItem" asp-action="Edit" asp-route-id="@item.Id"
+                                       class="btn btn-warning btn-sm">
+                                    Edit
+                                </a>
+
+                                <a asp-controller="EquipmentItem" asp-action="Delete" asp-route-id="@item.Id"
+                                       class="btn btn-danger btn-sm">
+                                    Delete
+                                </a>
+                            </div>
+                        }
+                    </div>
+
+                </div>
+            </div>
+        }
+    </div>
+}

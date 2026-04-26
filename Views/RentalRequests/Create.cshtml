@@ -1,0 +1,77 @@
+﻿@using Equipment_RentalNow.Data.Models
+
+@{
+    ViewData["Title"] = "Create Rental Request";
+    var equipmentItems = ViewBag.EquipmentItems as List<EquipmentItem>;
+}
+
+<h1>Create Rental Request</h1>
+
+<form asp-action="Create" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+    <div class="mb-3">
+        <label for="startDate" class="form-label">Start Date</label>
+        <input type="date" id="startDate" name="startDate" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label for="endDate" class="form-label">End Date</label>
+        <input type="date" id="endDate" name="endDate" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label for="comment" class="form-label">Comment / Purpose</label>
+        <textarea id="comment" name="comment" class="form-control" rows="3"></textarea>
+    </div>
+
+    <h4 class="mt-4">Select Equipment</h4>
+
+    @if (equipmentItems == null || !equipmentItems.Any())
+    {
+        <p>No available equipment.</p>
+    }
+    else
+    {
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Select</th>
+                    <th>Name</th>
+                    <th>Available</th>
+                    <th>Condition</th>
+                    <th>Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in equipmentItems)
+                {
+                    <tr>
+                        <td>
+                            <input type="checkbox" name="equipmentIds" value="@item.Id" />
+                        </td>
+                        <td>@item.Name</td>
+                        <td>@item.AvailableQuantity</td>
+                        <td>@item.Condition</td>
+                        <td>
+                            <input type="number"
+                                   name="quantities"
+                                   class="form-control"
+                                   min="1"
+                                   max="@item.AvailableQuantity"
+                                   value="1" />
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+    <button type="submit" class="btn btn-primary">
+        Submit Request
+    </button>
+
+    <a asp-controller="EquipmentItem" asp-action="Index" class="btn btn-secondary">
+        Back
+    </a>
+</form>

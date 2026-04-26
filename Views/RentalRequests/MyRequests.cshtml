@@ -1,0 +1,50 @@
+﻿@model IEnumerable<Equipment_RentalNow.Data.Models.RentalRequest>
+
+@{
+    ViewData["Title"] = "My Requests";
+}
+
+<h1>My Requests</h1>
+
+@if (Model == null || !Model.Any())
+{
+    <p>No requests yet.</p>
+}
+else
+{
+    @foreach (var request in Model)
+    {
+        <div class="card mb-4">
+            <div class="card-body">
+
+                <h5>
+                    From: @request.StartDate.ToShortDateString()
+                    To: @request.EndDate.ToShortDateString()
+                </h5>
+
+                <p><strong>Status:</strong> @request.Status</p>
+
+                <p><strong>Comment:</strong> @request.Comment</p>
+
+                <h6>Items:</h6>
+                <ul>
+                    @foreach (var item in request.RentalRequestItems)
+                    {
+                        <li>
+                            @item.EquipmentItem.Name - Quantity: @item.Quantity
+                        </li>
+                    }
+                </ul>
+
+                @if (request.Status == "В изчакване")
+                {
+                    <form asp-action="Delete" method="post">
+                        <input type="hidden" name="id" value="@request.Id" />
+                        <button class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                }
+
+            </div>
+        </div>
+    }
+}

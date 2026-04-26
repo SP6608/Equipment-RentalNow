@@ -2,7 +2,7 @@
 using Equipment_RentalNow.Data.Models;
 using System.ComponentModel.DataAnnotations;
 
-namespace Equipment_RentalNow.Models
+namespace Equipment_RentalNow.Data.Models
 {
     public class RentalRequest
     {
