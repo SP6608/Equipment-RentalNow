@@ -47,10 +47,20 @@ else
                     </div>
 
                     <div class="card-footer d-flex justify-content-between">
-                        <a asp-controller="EquipmentItem" asp-action="Details" asp-route-id="@item.Id"
-                               class="btn btn-outline-primary btn-sm">
-                            Details
-                        </a>
+                        <div>
+                            <a asp-controller="EquipmentItem" asp-action="Details" asp-route-id="@item.Id"
+                                   class="btn btn-outline-primary btn-sm">
+                                Details
+                            </a>
+
+                            @if (User.Identity != null && User.Identity.IsAuthenticated && !User.IsInRole("Admin"))
+                            {
+                                <a asp-controller="RentalRequests" asp-action="Create"
+                                       class="btn btn-success btn-sm">
+                                    Request
+                                </a>
+                            }
+                        </div>
 
                         @if (User.IsInRole("Admin"))
                         {

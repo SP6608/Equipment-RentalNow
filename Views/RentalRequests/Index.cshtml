@@ -1,0 +1,69 @@
+﻿@model IEnumerable<Equipment_RentalNow.Data.Models.RentalRequest>
+
+@{
+    ViewData["Title"] = "All Requests";
+}
+
+<h1>All Requests</h1>
+
+@if (Model == null || !Model.Any())
+{
+    <p>No requests found.</p>
+}
+else
+{
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Period</th>
+                <th>Status</th>
+                <th>Items</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var request in Model)
+            {
+                <tr>
+                    <td>@request.User.Email</td>
+                    <td>
+                        @request.StartDate.ToShortDateString()
+                        -
+                        @request.EndDate.ToShortDateString()
+                    </td>
+                    <td>@request.Status</td>
+                    <td>
+                        <ul>
+                            @foreach (var item in request.RentalRequestItems)
+                            {
+                                <li>@item.EquipmentItem.Name - @item.Quantity</li>
+                            }
+                        </ul>
+                    </td>
+                    <td>
+                        <form asp-controller="RentalRequests" asp-action="ChangeStatus" method="post" class="d-flex gap-1">
+                            <input type="hidden" name="id" value="@request.Id" />
+
+                            <button type="submit" name="status" value="В изчакване" class="btn btn-warning btn-sm">
+                                Pending
+                            </button>
+
+                            <button type="submit" name="status" value="Одобрена" class="btn btn-success btn-sm">
+                                Approve
+                            </button>
+
+                            <button type="submit" name="status" value="Отказана" class="btn btn-danger btn-sm">
+                                Reject
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<a asp-controller="Home" asp-action="Index" class="btn btn-secondary">
+    Back
+</a>
